@@ -1,0 +1,86 @@
+﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
+-- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
+
+create database projeto ;
+
+use projeto ;
+go
+
+
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION QUICKDBD
+
+CREATE TABLE [Clientes] (
+    [id_clientes] int  NOT NULL ,
+    [nome] varchar(50)  NOT NULL ,
+    [telefone] nvarchar(50)  NOT NULL ,
+    [email] varchar(50)  NOT NULL ,
+    CONSTRAINT [PK_Clientes] PRIMARY KEY CLUSTERED (
+        [id_clientes] ASC
+    )
+)
+
+CREATE TABLE [Pedido] (
+    [id_pedido] int  NOT NULL ,
+    [id_clientes] int  NOT NULL ,
+    [id_produto] varchar(100)  NOT NULL ,
+    [qtd_pedido] int  NOT NULL ,
+    [data_pedido] date  NOT NULL ,
+    [forma_pagamento] varchar(50)  NOT NULL ,
+    CONSTRAINT [PK_Pedido] PRIMARY KEY CLUSTERED (
+        [id_pedido] ASC
+    )
+)
+
+CREATE TABLE [Produto] (
+    [id_produto] int  NOT NULL ,
+    [produto_nome] varchar(50)  NOT NULL ,
+    CONSTRAINT [PK_Produto] PRIMARY KEY CLUSTERED (
+        [id_produto] ASC
+    )
+)
+
+CREATE TABLE [Insumos_Produtos] (
+    [id_insumos_produtos] int  NOT NULL ,
+    [id_produtos] int  NOT NULL ,
+    [id_insumos] int  NOT NULL ,
+    [qtde_produto] int  NOT NULL ,
+    CONSTRAINT [PK_Insumos_Produtos] PRIMARY KEY CLUSTERED (
+        [id_insumos_produtos] ASC
+    )
+)
+
+CREATE TABLE [Insumos] (
+    [id_insumo] int  NOT NULL ,
+    [ingredientes] varchar(100)  NOT NULL ,
+    [quantidade] int  NOT NULL ,
+    [fornecedor] varchar(50)  NOT NULL ,
+    [und_medida] decimal  NOT NULL ,
+    [preco] decimal  NOT NULL ,
+    CONSTRAINT [PK_Insumos] PRIMARY KEY CLUSTERED (
+        [id_insumo] ASC
+    )
+)
+
+ALTER TABLE [Pedido] WITH CHECK ADD CONSTRAINT [FK_Pedido_id_clientes] FOREIGN KEY([id_clientes])
+REFERENCES [Clientes] ([id_clientes])
+
+ALTER TABLE [Pedido] CHECK CONSTRAINT [FK_Pedido_id_clientes]
+
+ALTER TABLE [Produto] WITH CHECK ADD CONSTRAINT [FK_Produto_id_produto] FOREIGN KEY([id_produto])
+REFERENCES [Pedido] ([id_produto])
+
+ALTER TABLE [Produto] CHECK CONSTRAINT [FK_Produto_id_produto]
+
+ALTER TABLE [Insumos_Produtos] WITH CHECK ADD CONSTRAINT [FK_Insumos_Produtos_id_produtos] FOREIGN KEY([id_produtos])
+REFERENCES [Produto] ([id_produto])
+
+ALTER TABLE [Insumos_Produtos] CHECK CONSTRAINT [FK_Insumos_Produtos_id_produtos]
+
+ALTER TABLE [Insumos] WITH CHECK ADD CONSTRAINT [FK_Insumos_id_insumo] FOREIGN KEY([id_insumo])
+REFERENCES [Insumos_Produtos] ([id_insumos])
+
+ALTER TABLE [Insumos] CHECK CONSTRAINT [FK_Insumos_id_insumo]
+
+COMMIT TRANSACTION QUICKDBD
